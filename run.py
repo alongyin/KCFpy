@@ -56,7 +56,7 @@ if __name__ == '__main__':
             inteval = 30
     else:  assert(0), "too many arguments"
     """
-    cap = cv2.VideoCapture("D:\\gihub\\video_ad_practice\\input_video\\27.mp4")
+    cap = cv2.VideoCapture("D:\\gihub\\video_ad_practice\\input_video\\101.mp4")
     inteval = 25
     tracker = kcftracker.KCFTracker(True, True, True)  # hog, fixed_window, multiscale
     #if you use hog feature, there will be a short pause after you draw a first boundingbox, that is due to the use of Numba.
@@ -73,8 +73,10 @@ if __name__ == '__main__':
             cv2.rectangle(frame,(ix,iy), (cx,cy), (0,255,255), 1)
         elif(initTracking):
             cv2.rectangle(frame,(ix,iy), (ix+w,iy+h), (0,255,255), 2)
-
+            
+            print("ix:" + str(ix) + ",iy:" + str(iy) + ",w:" + str(w) + ",h:" + str(h))
             tracker.init([ix,iy,w,h], frame)
+            #tracker.init([261,125,158,210],frame)
 
             initTracking = False
             onTracking = True
