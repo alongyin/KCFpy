@@ -34,9 +34,9 @@ def rearrange(img):
     #return np.fft.fftshift(img, axes=(0,1))
     assert(img.ndim==2)
     img_ = np.zeros(img.shape, img.dtype)
-    print("img.shape:" + str(img.shape))
+    #print("img.shape:" + str(img.shape))
     xh, yh = int(img.shape[1]/2) - int((img.shape[1] % 2)), int(img.shape[0]/2) - int((img.shape[0] % 2))
-    print("img.shape: %d,%d" % (xh,yh)) 
+    #print("img.shape: %d,%d" % (xh,yh)) 
     img_[0:yh,0:xh], img_[yh:img.shape[0],xh:img.shape[1]] = img[yh:img.shape[0],xh:img.shape[1]], img[0:yh,0:xh]
     img_[0:yh,xh:img.shape[1]], img_[yh:img.shape[0],0:xh] = img[yh:img.shape[0],0:xh], img[0:yh,xh:img.shape[1]]
     return img_
@@ -236,12 +236,14 @@ class KCFTracker:
 
         if(inithann):
             self.createHanningMats()  # createHanningMats need size_patch
-
-        FeaturesMap = self.hann * FeaturesMap
+            
+        
+        #FeaturesMap = self.hann * FeaturesMap
         return FeaturesMap
 
     def detect(self, z, x):
         k = self.gaussianCorrelation(x, z)
+        #print("k:" + str(k))
         res = real(fftd(complexMultiplication(self._alphaf, fftd(k)), True))
 
         _, pv, _, pi = cv2.minMaxLoc(res)   # pv:float  pi:tuple of int
@@ -314,5 +316,8 @@ class KCFTracker:
 
         x = self.getFeatures(image, 0, 1.0)
         self.train(x, self.interp_factor)
-
+        
+        print(self._roi)
+        
+        
         return self._roi

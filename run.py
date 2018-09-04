@@ -10,13 +10,13 @@ initTracking = False
 onTracking = False
 ix, iy, cx, cy = -1, -1, -1, -1
 w, h = 0, 0
-
+length = 0
 inteval = 1
 duration = 0.01
 
 # mouse callback function
 def draw_boundingbox(event, x, y, flags, param):
-    global selectingObject, initTracking, onTracking, ix, iy, cx,cy, w, h
+    global selectingObject, initTracking, onTracking, ix, iy, cx,cy, w, h,length
     
     if event == cv2.EVENT_LBUTTONDOWN:
         selectingObject = True
@@ -32,6 +32,7 @@ def draw_boundingbox(event, x, y, flags, param):
         if(abs(x-ix)>10 and abs(y-iy)>10):
             w, h = abs(x - ix), abs(y - iy)
             ix, iy = min(x, ix), min(y, iy)
+            length = max(w,h)
             initTracking = True
         else:
             onTracking = False
@@ -56,7 +57,7 @@ if __name__ == '__main__':
             inteval = 30
     else:  assert(0), "too many arguments"
     """
-    cap = cv2.VideoCapture("D:\\gihub\\video_ad_practice\\input_video\\101.mp4")
+    cap = cv2.VideoCapture("D:\\gihub\\video_ad_practice\\input_video\\115.mp4")
     inteval = 25
     tracker = kcftracker.KCFTracker(True, True, True)  # hog, fixed_window, multiscale
     #if you use hog feature, there will be a short pause after you draw a first boundingbox, that is due to the use of Numba.
@@ -71,11 +72,14 @@ if __name__ == '__main__':
 
         if(selectingObject):
             cv2.rectangle(frame,(ix,iy), (cx,cy), (0,255,255), 1)
+            #cv2.rectangle(frame,(ix,iy),(ix + length,iy + length),(0,255,255),1)
         elif(initTracking):
-            cv2.rectangle(frame,(ix,iy), (ix+w,iy+h), (0,255,255), 2)
-            
-            print("ix:" + str(ix) + ",iy:" + str(iy) + ",w:" + str(w) + ",h:" + str(h))
-            tracker.init([ix,iy,w,h], frame)
+            #cv2.rectangle(frame,(ix,iy), (ix+w,iy+h), (0,255,255), 2)
+            cv2.rectangle(frame,(ix,iy),(ix + length,iy + length),(0,255,255),2)
+            #print("ix:" + str(ix) + ",iy:" + str(iy) + ",w:" + str(w) + ",h:" + str(h))
+            print("ix:" + str(ix) + ",iy" + str(iy) + ",length:" + str(length))
+            #tracker.init([ix,iy,w,h], frame)
+            tracker.init([ix,iy,length,length],frame)
             #tracker.init([261,125,158,210],frame)
 
             initTracking = False
